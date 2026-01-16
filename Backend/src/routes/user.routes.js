@@ -16,6 +16,7 @@ import {
   getLogOutUserController,
 } from "../controllers/user.controller.js";
 
+
 // Router Setup
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.post("/register", validate(registerValidator), registerUserController);
 router.post("/login", validate(loginValidator), loginUserController);
 router.get("/profile", authUser, getProfileUserController);
 router.get("/logout", authUser, getLogOutUserController);
+
 
 export default router;

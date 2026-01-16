@@ -1,8 +1,11 @@
 import express from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import userRoutes from "./routes/user.routes.js";
 import cors from "cors";
+
+// Import Routes
+import userRoutes from "./routes/user.routes.js";
+import projectRoutes from "./routes/poject.routes.js";
 
 // Create Express Server
 const app = express();
@@ -25,9 +28,11 @@ app.use(morgan('dev'));
 app.use(cookieParser()); 
 app.use(express.urlencoded({extended : true}));
 
-// For Routes
+// For User Routes
 app.use("/api/auth" , userRoutes)
 
+// For Project Routes
+app.use("/api/project" , projectRoutes)
 
 
 export default app;
