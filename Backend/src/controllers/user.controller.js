@@ -37,7 +37,7 @@ export const loginUserController = async (req, res) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-
+    
     res.status(201).json({
       success: true,
       message: "User Login successfully",

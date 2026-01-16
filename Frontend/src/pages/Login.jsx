@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import axios from "../config/axios";
+import { UserContext } from "../context/user.context";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,6 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const handleChange = (e) => {
     if (e.target.name === "email") {
@@ -27,14 +29,22 @@ const Login = () => {
       .post("/api/auth/login", { email, password }, { withCredentials: true })
       .then((res) => {
         console.log("Login success:", res.data.data);
+
+        localStorage.setItem("token", res.data.data.token);
+        setUser({
+        id: res.data.data.id,
+        username: res.data.data.username,
+        email: res.data.data.email,
+      });
         navigate("/");
       })
       .catch((err) => {
-        const apiError = err.response?.data;
-        if (apiError?.errors && apiError.errors.length > 0) {
-          setError(apiError.errors[0].message);
+        const apiError = err.response?.data || {};
+
+        if (apiError.errors?.length > 0) {
+          setError(apiError.errors[0]?.message || "Something went wrong");
         } else {
-          setError(apiError?.message || "Something went wrong");
+          setError(apiError.message || "Something went wrong");
         }
       });
   };
