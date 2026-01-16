@@ -10,6 +10,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,6 +25,7 @@ export default function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(username, email, password);
+    setError("");
 
     axios
       .post(
@@ -35,8 +37,17 @@ export default function Register() {
         console.log("Register success:", res.data);
         navigate("/");
       })
-      .catch((err) => {
-        console.error(err.response?.data || err.message);
+     .catch((err) => {
+        const apiError = err.response?.data;
+        if (apiError?.errors && apiError.errors.length > 0) {
+          setError(apiError.errors[0].message);
+          // console.log(apiError.errors[0].message);
+          
+        } else {
+          setError(apiError?.message || "Something went wrong");
+          // console.log(apiError?.message || "Something went wrong");
+          
+        }
       });
   };
 
@@ -65,6 +76,13 @@ export default function Register() {
             Join us and start your journey today
           </p>
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">

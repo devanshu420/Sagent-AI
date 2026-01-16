@@ -6,10 +6,7 @@ import {
 
 export const registerUserController = async (req, res) => {
   try {
-    console.log("Request body:", req.body);
-
     const user = await registerUserService(req.body);
-    console.log("User created:", user);
 
     res.cookie("token", user.token, {
       httpOnly: true,
@@ -22,12 +19,14 @@ export const registerUserController = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    return res.status(401).json({
+    res.status(error.statusCode || 500).json({
       success: false,
       message: error.message,
+      field: error.field || null,
     });
   }
 };
+
 
 export const loginUserController = async (req, res) => {
   try {

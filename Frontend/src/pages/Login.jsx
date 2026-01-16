@@ -8,6 +8,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,17 +24,18 @@ const Login = () => {
     console.log(email, password);
 
     axios
-      .post(
-        "/api/auth/login",
-        { email, password },
-        { withCredentials: true }
-      )
+      .post("/api/auth/login", { email, password }, { withCredentials: true })
       .then((res) => {
         console.log("Login success:", res.data.data);
         navigate("/");
       })
       .catch((err) => {
-        console.error(err.response?.data || err.message);
+        const apiError = err.response?.data;
+        if (apiError?.errors && apiError.errors.length > 0) {
+          setError(apiError.errors[0].message);
+        } else {
+          setError(apiError?.message || "Something went wrong");
+        }
       });
   };
 
@@ -62,6 +64,13 @@ const Login = () => {
             Please sign in to your account
           </p>
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
 
         {/* Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -164,4 +173,3 @@ const Login = () => {
 };
 
 export default Login;
-

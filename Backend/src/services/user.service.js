@@ -2,36 +2,48 @@ import bcrypt from "bcryptjs";
 import userModel from "../models/user.model.js";
 import { generateToken } from "../utils/generateToken.js";
 
-
 // Register Service ********************************************************************************
-export const registerUserService = async ({ username , email, password }) => {
-
-  if(!email && !password){
-    throw new Error ("Email and Password are required");
+export const registerUserService = async ({ username, email, password }) => {
+  if (!username || !email || !password) {
+    const err = new Error("All fields are required");
+    err.statusCode = 422;
+    return Promise.reject(err);
   }
   console.log("Checking user in DB:", email);
 
-const existingUser = await userModel.findOne({ email: email.toLowerCase() });
-console.log("Found user:", existingUser);
-if (existingUser) {
-     throw new Error("User already exists with this email");
+  const normalizedEmail = email.toLowerCase();
+  const existingUser = await userModel.findOne({
+    $or: [{ email: normalizedEmail }, { username }],
+  });
+
+  if (existingUser) {
+    const err = new Error(
+      existingUser.email === normalizedEmail
+        ? "Email already exists"
+        : "Username already exists"
+    );
+
+    err.statusCode = 409;
+    err.field = existingUser.email === normalizedEmail ? "email" : "username";
+
+    return Promise.reject(err);
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await userModel.create({
     username,
-    email,
-    password: hashedPassword
+    email: normalizedEmail,
+    password: hashedPassword,
   });
 
   const token = generateToken(user._id);
 
   return {
     id: user._id,
-    username : user.username,
+    username: user.username,
     email: user.email,
-    token
+    token,
   };
 };
 
@@ -51,8 +63,8 @@ export const loginUserService = async ({ email, password }) => {
 
   return {
     id: user._id,
-    username : user.username,
+    username: user.username,
     email: user.email,
-    token
+    token,
   };
 };
