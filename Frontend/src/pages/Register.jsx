@@ -1,22 +1,23 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 
-const Login = () => {
+export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
+    username: "",
     email: "",
     password: "",
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+    console.log("Register Data:", form);
   };
 
   return (
@@ -35,19 +36,40 @@ const Login = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center text-white text-xl font-bold mb-4 shadow-lg shadow-blue-600/30"
           >
-            S
+            AI
           </motion.div>
           <h2 className="text-3xl font-bold text-zinc-100 tracking-tight">
-            Welcome back
+            Create an account
           </h2>
           <p className="mt-2 text-sm text-zinc-400">
-            Please sign in to your account
+            Join us and start your journey today
           </p>
         </div>
 
         {/* Form */}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div className="space-y-4">
+            {/* Username */}
+            <div>
+              <label className="block text-sm font-medium text-zinc-300 mb-1">
+                Username
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-5 w-5 text-zinc-500" />
+                </div>
+                <input
+                  name="username"
+                  type="text"
+                  required
+                  placeholder="John Doe"
+                  value={form.username}
+                  onChange={handleChange}
+                  className="block w-full pl-10 pr-3 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 transition sm:text-sm"
+                />
+              </div>
+            </div>
+
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-zinc-300 mb-1">
@@ -62,9 +84,9 @@ const Login = () => {
                   type="email"
                   required
                   placeholder="you@example.com"
-                  value={formData.email}
+                  value={form.email}
                   onChange={handleChange}
-                  className="block w-full pl-10 pr-3 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition sm:text-sm"
+                  className="block w-full pl-10 pr-3 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 transition sm:text-sm"
                 />
               </div>
             </div>
@@ -83,9 +105,9 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   required
                   placeholder="••••••••"
-                  value={formData.password}
+                  value={form.password}
                   onChange={handleChange}
-                  className="block w-full pl-10 pr-10 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition sm:text-sm"
+                  className="block w-full pl-10 pr-10 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 transition sm:text-sm"
                 />
                 <button
                   type="button"
@@ -98,49 +120,27 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Remember / Forgot */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-blue-600 focus:ring-blue-600"
-              />
-              <label className="ml-2 text-sm text-zinc-300">
-                Remember me
-              </label>
-            </div>
-
-            <a
-              href="#"
-              className="text-sm font-medium text-blue-500 hover:text-blue-400 hover:underline"
-            >
-              Forgot password?
-            </a>
-          </div>
-
           {/* Button */}
           <button
             type="submit"
             className="group w-full flex justify-center items-center py-3 px-4 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-600/30 active:scale-[0.98]"
           >
-            Sign in
+            Create account
             <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </button>
-
-          {/* Footer */}
-          <p className="text-center text-sm text-zinc-400">
-            Don’t have an account?{" "}
-            <Link
-              to="/register"
-              className="font-medium text-blue-500 hover:text-blue-400 hover:underline"
-            >
-              Sign up
-            </Link>
-          </p>
         </form>
+
+        {/* Footer */}
+        <p className="text-center text-sm text-zinc-400">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="font-medium text-blue-500 hover:text-blue-400 hover:underline"
+          >
+            Sign in
+          </Link>
+        </p>
       </motion.div>
     </div>
   );
-};
-
-export default Login;
+}

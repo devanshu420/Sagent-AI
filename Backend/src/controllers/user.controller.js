@@ -63,7 +63,7 @@ export const getProfileUserController = async (req, res) => {
 
 export const getLogOutUserController = async (req, res) => {
   try {
-    const token = req.cookies.token || req.headers.authorization.split;
+    const token = req.cookies.token || req.headers.authorization.split(" ")[1];
     res.clearCookie('token');
     res.status(200).json({
       success: true,
