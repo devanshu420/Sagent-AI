@@ -40,6 +40,7 @@ export const loginUserController = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
+
     res.status(201).json({
       success: true,
       message: "User Login successfully",
@@ -48,4 +49,12 @@ export const loginUserController = async (req, res) => {
   } catch (error) {
     console.log("Login Error ", error);
   }
+};
+
+export const getProfileUserController = async (req, res) => {
+
+  
+  res.status(200).json({
+    user: req.user,
+  });
 };
