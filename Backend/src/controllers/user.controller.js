@@ -58,3 +58,21 @@ export const getProfileUserController = async (req, res) => {
     user: req.user,
   });
 };
+
+
+
+export const getLogOutUserController = async (req, res) => {
+  try {
+    const token = req.cookies.token || req.headers.authorization.split;
+    res.clearCookie('token');
+    res.status(200).json({
+      success: true,
+      message: "User Logout successfully",
+      data: token,
+    });
+
+  } catch (error) {
+    console.log("Logout err" , error);
+    
+  }
+}
