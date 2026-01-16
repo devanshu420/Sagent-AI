@@ -2,22 +2,42 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import axios from "../config/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    if (e.target.name === "email") {
+      setEmail(e.target.value);
+    } else if (e.target.name === "password") {
+      setPassword(e.target.value);
+    } else if (e.target.name === "username") {
+      setUsername(e.target.value);
+    }
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Register Data:", form);
+    console.log(username, email, password);
+
+    axios
+      .post(
+        "/api/auth/register",
+        { username, email, password },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log("Register success:", res.data);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error(err.response?.data || err.message);
+      });
   };
 
   return (
@@ -63,7 +83,7 @@ export default function Register() {
                   type="text"
                   required
                   placeholder="John Doe"
-                  value={form.username}
+                  value={username}
                   onChange={handleChange}
                   className="block w-full pl-10 pr-3 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 transition sm:text-sm"
                 />
@@ -84,7 +104,7 @@ export default function Register() {
                   type="email"
                   required
                   placeholder="you@example.com"
-                  value={form.email}
+                  value={email}
                   onChange={handleChange}
                   className="block w-full pl-10 pr-3 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 transition sm:text-sm"
                 />
@@ -105,7 +125,7 @@ export default function Register() {
                   type={showPassword ? "text" : "password"}
                   required
                   placeholder="••••••••"
-                  value={form.password}
+                  value={password}
                   onChange={handleChange}
                   className="block w-full pl-10 pr-10 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 transition sm:text-sm"
                 />
@@ -114,7 +134,11 @@ export default function Register() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500 hover:text-zinc-300 transition"
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
                 </button>
               </div>
             </div>

@@ -4,7 +4,6 @@ import {
   loginUserService,
 } from "../services/user.service.js";
 
-
 export const registerUserController = async (req, res) => {
   try {
     console.log("Request body:", req.body);
@@ -23,7 +22,7 @@ export const registerUserController = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(401).json({
       success: false,
       message: error.message,
     });
@@ -40,39 +39,40 @@ export const loginUserController = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-
     res.status(201).json({
       success: true,
       message: "User Login successfully",
       data: user,
     });
   } catch (error) {
-    console.log("Login Error ", error);
+    return res.status(401).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
 export const getProfileUserController = async (req, res) => {
-
-  
   res.status(200).json({
     user: req.user,
   });
 };
 
-
-
 export const getLogOutUserController = async (req, res) => {
   try {
-    const token = req.cookies.token || req.headers.authorization.split(" ")[1];
-    res.clearCookie('token');
+    const token =
+      req.cookies?.token || req.headers?.authorization?.split(" ")[1];
+
+    res.clearCookie("token");
     res.status(200).json({
       success: true,
       message: "User Logout successfully",
       data: token,
     });
-
   } catch (error) {
-    console.log("Logout err" , error);
-    
+    return res.status(401).json({
+      success: false,
+      message: error.message,
+    });
   }
-}
+};

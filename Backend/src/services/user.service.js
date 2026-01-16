@@ -13,8 +13,8 @@ export const registerUserService = async ({ username , email, password }) => {
 
 const existingUser = await userModel.findOne({ email: email.toLowerCase() });
 console.log("Found user:", existingUser);
-  if (existingUser) {
-    throw new Error("User already exists");
+if (existingUser) {
+     throw new Error("User already exists with this email");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);

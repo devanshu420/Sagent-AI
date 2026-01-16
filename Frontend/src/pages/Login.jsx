@@ -1,22 +1,40 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import axios from "../config/axios";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "email") {
+      setEmail(e.target.value);
+    } else if (e.target.name === "password") {
+      setPassword(e.target.value);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+    console.log(email, password);
+
+    axios
+      .post(
+        "/api/auth/login",
+        { email, password },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log("Login success:", res.data.data);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error(err.response?.data || err.message);
+      });
   };
 
   return (
@@ -35,7 +53,7 @@ const Login = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center text-white text-xl font-bold mb-4 shadow-lg shadow-blue-600/30"
           >
-            S
+            AI
           </motion.div>
           <h2 className="text-3xl font-bold text-zinc-100 tracking-tight">
             Welcome back
@@ -60,10 +78,10 @@ const Login = () => {
                 <input
                   name="email"
                   type="email"
+                  value={email}
+                  onChange={handleChange}
                   required
                   placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
                   className="block w-full pl-10 pr-3 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition sm:text-sm"
                 />
               </div>
@@ -81,10 +99,10 @@ const Login = () => {
                 <input
                   name="password"
                   type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={handleChange}
                   required
                   placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
                   className="block w-full pl-10 pr-10 py-3 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition sm:text-sm"
                 />
                 <button
@@ -92,7 +110,11 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500 hover:text-zinc-300 transition"
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -105,9 +127,7 @@ const Login = () => {
                 type="checkbox"
                 className="h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-blue-600 focus:ring-blue-600"
               />
-              <label className="ml-2 text-sm text-zinc-300">
-                Remember me
-              </label>
+              <label className="ml-2 text-sm text-zinc-300">Remember me</label>
             </div>
 
             <a
@@ -144,3 +164,4 @@ const Login = () => {
 };
 
 export default Login;
+
