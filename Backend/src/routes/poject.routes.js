@@ -5,6 +5,7 @@ import {
   createProjectController,
   getAllProjectsController,
   addUserToProjectController,
+  getProjectByIdController
 } from "../controllers/project.controller.js";
 
 // Import Middlewares
@@ -32,5 +33,8 @@ router.get("/all-projects", authUser, getAllProjectsController);
 
 // Add User To Project
 router.put("/add-user-to-project", authUser, addUserToProjectController);
+
+// Get Particular Project By ProjectId
+router.get("/get-project/:projectId", authUser, getProjectByIdController);
 
 export default router;

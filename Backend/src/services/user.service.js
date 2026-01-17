@@ -71,7 +71,7 @@ export const loginUserService = async ({ email, password }) => {
 
 
 
-export const getAllUsersService = async () => {
-  const users = await userModel.find({});
+export const getAllUsersService = async ({userId}) => {
+  const users = await userModel.find({ _id: { $ne: userId } });
   return users;
-};
+}; 

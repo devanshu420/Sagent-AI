@@ -2,6 +2,7 @@ import userModel from "../models/user.model.js";
 import {
   registerUserService,
   loginUserService,
+  getAllUsersService,
 } from "../services/user.service.js";
 
 export const registerUserController = async (req, res) => {
@@ -79,7 +80,8 @@ export const getLogOutUserController = async (req, res) => {
 
 export const getAllUsersController = async (req, res) => {
   try {
-    const users = await getAllUsersService();
+    const {userId} = req.user;
+    const users = await getAllUsersService({userId});
     res.status(200).json({
       success: true,
       message: "Users fetched successfully",
