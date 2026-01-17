@@ -75,3 +75,20 @@ export const getLogOutUserController = async (req, res) => {
     });
   }
 };
+
+
+export const getAllUsersController = async (req, res) => {
+  try {
+    const users = await getAllUsersService();
+    res.status(200).json({
+      success: true,
+      message: "Users fetched successfully",
+      data: users,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

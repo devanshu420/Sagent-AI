@@ -68,3 +68,10 @@ export const loginUserService = async ({ email, password }) => {
     token,
   };
 };
+
+
+
+export const getAllUsersService = async () => {
+  const users = await userModel.find({});
+  return users;
+};

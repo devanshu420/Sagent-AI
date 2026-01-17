@@ -14,6 +14,7 @@ import {
   loginUserController,
   getProfileUserController,
   getLogOutUserController,
+  getAllUsersController,
 } from "../controllers/user.controller.js";
 
 
@@ -26,6 +27,8 @@ router.post("/register", validate(registerValidator), registerUserController);
 router.post("/login", validate(loginValidator), loginUserController);
 router.get("/profile", authUser, getProfileUserController);
 router.get("/logout", authUser, getLogOutUserController);
+
+router.get("/all-users", authUser, getAllUsersController);
 
 
 export default router;

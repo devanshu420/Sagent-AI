@@ -1,7 +1,11 @@
 import express from "express";
 
 // Import Project Controller
-import { createProjectController } from "../controllers/project.controller.js";
+import {
+  createProjectController,
+  getAllProjectsController,
+  addUserToProjectController,
+} from "../controllers/project.controller.js";
 
 // Import Middlewares
 import { authUser } from "../middlewares/auth.middleware.js";
@@ -20,8 +24,13 @@ router.post(
     .withMessage("Project name is required")
     .isLength({ min: 3 })
     .withMessage("Project name must be at least 3 characters"),
-  
-  createProjectController
+  createProjectController,
 );
+
+// Get All Project By UserId
+router.get("/all-projects", authUser, getAllProjectsController);
+
+// Add User To Project
+router.put("/add-user-to-project", authUser, addUserToProjectController);
 
 export default router;
